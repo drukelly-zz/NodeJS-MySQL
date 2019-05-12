@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-mysql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drukelly/NodeJS-MySQL.git"
+  },
+  "keywords": [],
+  "author": "Dru Kelly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/drukelly/NodeJS-MySQL/issues"
+  },
+  "homepage": "https://github.com/drukelly/NodeJS-MySQL#readme",
+  "devDependencies": {
+    "dotenv": "^8.0.0",
+    "inquirer": "^6.3.1",
+    "mysql": "^2.17.1"
+  }
+}
