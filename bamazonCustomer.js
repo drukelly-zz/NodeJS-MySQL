@@ -1,3 +1,4 @@
+const Table = require('cli-table')
 require('dotenv').config()
 const inquirer = require('inquirer')
 const mysql = require('mysql')
@@ -14,15 +15,18 @@ connection.connect(function (error) {
   if (error) throw error
   // console.log(`connected as id ${connection.threadId}`)
   queryAll()
-  connection.end()
 })
 
 function queryAll () {
   let query = `select * from ${process.env.dbTable}`
   connection.query(query, function (error, response) {
     if (error) throw error
+    const table = new Table({
+      head: ['SKU', 'Product Name', 'Department', 'Price', 'In Stock']
+    })
     for (let i = 0; i < response.length; i++) {
-      console.log(`${response[i].sku} | ${response[i].product_name} | ${response[i].department_name} | ${response[i].price} | ${response[i].stock_quantity}`)
+      table.push([`${response[i].sku}`, `${response[i].product_name}`, `${response[i].department_name}`, `${response[i].price}`, `${response[i].stock_quantity}`])
     }
+    console.log(table.toString())
   })
 }
