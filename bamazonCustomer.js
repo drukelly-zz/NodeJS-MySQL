@@ -22,15 +22,18 @@ const questions = [{
   message: 'How many would you like?'
 }]
 
-connection.connect( error => {
+connection.connect(error => {
   if (error) throw error
   // console.log(`connected as id ${connection.threadId}`)
   listInventory()
 })
 
+// Big Text Generator
+// [https://psfonttk.com/big-text-generator/]
+
 const listInventory = () => {
-  let query = `select * from ${process.env.dbTable}`
-  connection.query(query, (error, response) => {
+  let initQuery = `select * from ${process.env.dbTable}`
+  connection.query(initQuery, (error, response) => {
     if (error) throw error
     let table = new Table({
       head: ['SKU', 'Product Name', 'Department', 'Unit Price', 'In Stock']
@@ -79,7 +82,6 @@ const listInventory = () => {
                 subTotal = formatMoney(response[i].price * qty.selectedQty),
                 inStock = response[i].stock_quantity
             if (qty.selectedQty > inStock) {
-              // [https://psfonttk.com/big-text-generator/]
               console.log(`
 █▀▀▄ █▀▀█ ▀▀█▀▀   █▀▀ █▀▀▄ █▀▀█ █░░█ █▀▀▀ █░░█   ░▀░ █▀▀▄   █▀▀ ▀▀█▀▀ █▀▀█ █▀▀ █░█ █
 █░░█ █░░█ ░░█░░   █▀▀ █░░█ █░░█ █░░█ █░▀█ █▀▀█   ▀█▀ █░░█   ▀▀█ ░░█░░ █░░█ █░░ █▀▄ ▀
