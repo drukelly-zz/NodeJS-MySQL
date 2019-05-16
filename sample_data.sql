@@ -25,7 +25,7 @@ insert into products(sku, product_name, department_name, price, stock_quantity)
 values(8, "Dell XPS", "Computers and Laptops", 1899.00, 765);
 
 insert into products(sku, product_name, department_name, price, stock_quantity)
-values(9, "Bose SoundSport", "Electronics", 199.00, 1230);
+values(9, "Jabra Elite 65t Active", "Electronics", 169.00, 1230);
 
 insert into products(sku, product_name, department_name, price, stock_quantity)
 values(10, "Apple AirPods 2", "Electronics", 199.00, 1230);

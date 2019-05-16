@@ -51,6 +51,14 @@ const listInventory = () => {
     })
     .then(itemToBuy => {
       // console.log(itemToBuy.selectedSKU)
+      // console.log(`The max is ${response.length}`)
+      if (itemToBuy.selectedSKU > response.length) {
+        console.log(`
+░▀░ ▀▀█▀▀ █▀▀ █▀▄▀█   █▀▀▄ █▀▀█ █▀▀ █▀▀ █▀▀▄ █ ▀▀█▀▀   █▀▀ █░█ ░▀░ █▀▀ ▀▀█▀▀ █
+▀█▀ ░░█░░ █▀▀ █░▀░█   █░░█ █░░█ █▀▀ ▀▀█ █░░█ ░ ░░█░░   █▀▀ ▄▀▄ ▀█▀ ▀▀█ ░░█░░ ▀
+▀▀▀ ░░▀░░ ▀▀▀ ▀░░░▀   ▀▀▀░ ▀▀▀▀ ▀▀▀ ▀▀▀ ▀░░▀ ░ ░░▀░░   ▀▀▀ ▀░▀ ▀▀▀ ▀▀▀ ░░▀░░ ▄`.red)
+        process.exit(1)
+      }
       inquirer.prompt( {
         name: 'selectedQty',
         type: 'input',
@@ -75,8 +83,7 @@ const listInventory = () => {
               console.log(`
 █▀▀▄ █▀▀█ ▀▀█▀▀   █▀▀ █▀▀▄ █▀▀█ █░░█ █▀▀▀ █░░█   ░▀░ █▀▀▄   █▀▀ ▀▀█▀▀ █▀▀█ █▀▀ █░█ █
 █░░█ █░░█ ░░█░░   █▀▀ █░░█ █░░█ █░░█ █░▀█ █▀▀█   ▀█▀ █░░█   ▀▀█ ░░█░░ █░░█ █░░ █▀▄ ▀
-▀░░▀ ▀▀▀▀ ░░▀░░   ▀▀▀ ▀░░▀ ▀▀▀▀ ░▀▀▀ ▀▀▀▀ ▀░░▀   ▀▀▀ ▀░░▀   ▀▀▀ ░░▀░░ ▀▀▀▀ ▀▀▀ ▀░▀ ▄
-              `.red)
+▀░░▀ ▀▀▀▀ ░░▀░░   ▀▀▀ ▀░░▀ ▀▀▀▀ ░▀▀▀ ▀▀▀▀ ▀░░▀   ▀▀▀ ▀░░▀   ▀▀▀ ░░▀░░ ▀▀▀▀ ▀▀▀ ▀░▀ ▄`.red)
             } else {
               table.push([`${sku}`, `${qty.selectedQty}`, `${productName}`, `${deptName}`, `$${price}`, `$${subTotal}`])
               console.log(`
@@ -84,6 +91,11 @@ const listInventory = () => {
 █▄▄█ █░░█ █░░█   ░░█ █░░█ ▀▀█ ░░█░░   █▀▀▄ █░░█ █░░█ █░▀█ █▀▀█ ░░█░░ ░
 ▄▄▄█ ▀▀▀▀ ░▀▀▀   █▄█ ░▀▀▀ ▀▀▀ ░░▀░░   ▀▀▀░ ▀▀▀▀ ░▀▀▀ ▀▀▀▀ ▀░░▀ ░░▀░░ ▀`.green)
               console.log(table.toString())
+              let updateQuery = `update ${process.env.dbTable} set stock_quantity = ${inStock-qty.selectedQty} where sku = ${sku}`
+              connection.query(updateQuery, (error, response) => {
+                if (error) throw error
+                console.log(`Inventory Updated!`.green)
+              })
             }
             connection.end()
           }
