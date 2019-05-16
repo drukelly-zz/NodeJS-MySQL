@@ -16,7 +16,7 @@ insert into products(sku, product_name, department_name, price, stock_quantity)
 values(5, "Microsoft Xbox S", "Video Games", 349.00, 999);
 
 insert into products(sku, product_name, department_name, price, stock_quantity)
-values(6, "Google Pixel 3a", "Smartphones", 299.00, 999);
+values(6, "Google Pixel 3a", "Smartphones", 399.00, 999);
 
 insert into products(sku, product_name, department_name, price, stock_quantity)
 values(7, "Nintendo Switch", "Video Games", 249.00, 23);

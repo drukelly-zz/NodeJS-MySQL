@@ -19,8 +19,10 @@
   "homepage": "https://github.com/drukelly/NodeJS-MySQL#readme",
   "devDependencies": {
     "cli-table": "^0.3.1",
+    "colors": "^1.3.3",
     "dotenv": "^8.0.0",
     "inquirer": "^6.3.1",
     "mysql": "^2.17.1"
-  }
+  },
+  "dependencies": {}
 }
