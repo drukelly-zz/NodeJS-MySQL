@@ -54,6 +54,7 @@ const runCommand = command => {
   switch (command) {
     case menuItems[0]:
       console.log(menuItems[0])
+      
       break
     case menuItems[1]:
       console.log(menuItems[1])
@@ -64,7 +65,7 @@ const runCommand = command => {
     case menuItems[3]:
       console.log(menuItems[3])
      break
-}
+  }
   process.exit(1)
 }
 
