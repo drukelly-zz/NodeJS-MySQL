@@ -1,6 +1,7 @@
 const Table = require('cli-table')
 require('colors')
 require('dotenv').config()
+const formatMoney = require('./formatMoney')
 const inquirer = require('inquirer')
 const mysql = require('mysql')
 
@@ -12,24 +13,21 @@ const connection = mysql.createConnection({
   database: process.env.db
 })
 
-const questions = [{
-  name: 'selectedSKU',
-  type: 'input',
-  message: 'Which SKU item would you like to buy?'
-}, {
-  name: 'selectedQty',
-  type: 'input',
-  message: 'How many would you like?'
-}]
+// const questions = [{
+//   name: 'selectedSKU',
+//   type: 'input',
+//   message: 'Which SKU item would you like to buy?'
+// }, {
+//   name: 'selectedQty',
+//   type: 'input',
+//   message: 'How many would you like?'
+// }]
 
 connection.connect(error => {
   if (error) throw error
   // console.log(`connected as id ${connection.threadId}`)
   listInventory()
 })
-
-// Big Text Generator
-// [https://psfonttk.com/big-text-generator/]
 
 const listInventory = () => {
   let initQuery = `select * from ${process.env.dbTable}`
@@ -46,10 +44,7 @@ const listInventory = () => {
           inStock = response[i].stock_quantity
       table.push([`${sku}`, `${productName}`, `${deptName}`, `$${price}`, `${inStock}`])
     }
-    console.log(`
-      █░░░█ █▀▀ █░░ █▀▀ █▀▀█ █▀▄▀█ █▀▀   ▀▀█▀▀ █▀▀█   █▀▀▄ █▀▀█ █▀▄▀█ █▀▀█ ▀▀█ █▀▀█ █▀▀▄ █
-      █▄█▄█ █▀▀ █░░ █░░ █░░█ █░▀░█ █▀▀   ░░█░░ █░░█   █▀▀▄ █▄▄█ █░▀░█ █▄▄█ ▄▀░ █░░█ █░░█ ▀
-      ░▀░▀░ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀▀ ▀░░░▀ ▀▀▀   ░░▀░░ ▀▀▀▀   ▀▀▀░ ▀░░▀ ▀░░░▀ ▀░░▀ ▀▀▀ ▀▀▀▀ ▀░░▀ ▄`.yellow)
+    welcomeSplash()
     console.log(table.toString())
     inquirer.prompt({
       name: 'selectedSKU',
@@ -60,10 +55,7 @@ const listInventory = () => {
       // console.log(itemToBuy.selectedSKU)
       // console.log(`The max is ${response.length}`)
       if (itemToBuy.selectedSKU > response.length) {
-        console.log(`
-░▀░ ▀▀█▀▀ █▀▀ █▀▄▀█   █▀▀▄ █▀▀█ █▀▀ █▀▀ █▀▀▄ █ ▀▀█▀▀   █▀▀ █░█ ░▀░ █▀▀ ▀▀█▀▀ █
-▀█▀ ░░█░░ █▀▀ █░▀░█   █░░█ █░░█ █▀▀ ▀▀█ █░░█ ░ ░░█░░   █▀▀ ▄▀▄ ▀█▀ ▀▀█ ░░█░░ ▀
-▀▀▀ ░░▀░░ ▀▀▀ ▀░░░▀   ▀▀▀░ ▀▀▀▀ ▀▀▀ ▀▀▀ ▀░░▀ ░ ░░▀░░   ▀▀▀ ▀░▀ ▀▀▀ ▀▀▀ ░░▀░░ ▄`.red)
+        doesntExists()
         process.exit(1)
       }
       inquirer.prompt( {
@@ -86,16 +78,10 @@ const listInventory = () => {
                 subTotal = formatMoney(response[i].price * qty.selectedQty),
                 inStock = response[i].stock_quantity
             if (qty.selectedQty > inStock) {
-              console.log(`
-█▀▀▄ █▀▀█ ▀▀█▀▀   █▀▀ █▀▀▄ █▀▀█ █░░█ █▀▀▀ █░░█   ░▀░ █▀▀▄   █▀▀ ▀▀█▀▀ █▀▀█ █▀▀ █░█ █
-█░░█ █░░█ ░░█░░   █▀▀ █░░█ █░░█ █░░█ █░▀█ █▀▀█   ▀█▀ █░░█   ▀▀█ ░░█░░ █░░█ █░░ █▀▄ ▀
-▀░░▀ ▀▀▀▀ ░░▀░░   ▀▀▀ ▀░░▀ ▀▀▀▀ ░▀▀▀ ▀▀▀▀ ▀░░▀   ▀▀▀ ▀░░▀   ▀▀▀ ░░▀░░ ▀▀▀▀ ▀▀▀ ▀░▀ ▄`.red)
+              notEnough()
             } else {
               table.push([`${sku}`, `${qty.selectedQty}`, `${productName}`, `${deptName}`, `$${price}`, `$${subTotal}`])
-              console.log(`
-█░░█ █▀▀█ █░░█   ░░▀ █░░█ █▀▀ ▀▀█▀▀   █▀▀▄ █▀▀█ █░░█ █▀▀▀ █░░█ ▀▀█▀▀ ▄
-█▄▄█ █░░█ █░░█   ░░█ █░░█ ▀▀█ ░░█░░   █▀▀▄ █░░█ █░░█ █░▀█ █▀▀█ ░░█░░ ░
-▄▄▄█ ▀▀▀▀ ░▀▀▀   █▄█ ░▀▀▀ ▀▀▀ ░░▀░░   ▀▀▀░ ▀▀▀▀ ░▀▀▀ ▀▀▀▀ ▀░░▀ ░░▀░░ ▀`.green)
+              justBought()
               console.log(table.toString())
               let updateQuery = `update ${process.env.dbTable} set stock_quantity = ${inStock-qty.selectedQty} where sku = ${sku}`
               connection.query(updateQuery, (error, response) => {
@@ -111,19 +97,32 @@ const listInventory = () => {
   })
 }
 
-// [https://stackoverflow.com/a/149099]
-const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") => {
-  try {
-    decimalCount = Math.abs(decimalCount)
-    decimalCount = isNaN(decimalCount) ? 2 : decimalCount
+// Big Text Generator
+// [https://psfonttk.com/big-text-generator/]
+const doesntExists = () => {
+  console.log(`
+░▀░ ▀▀█▀▀ █▀▀ █▀▄▀█   █▀▀▄ █▀▀█ █▀▀ █▀▀ █▀▀▄ █ ▀▀█▀▀   █▀▀ █░█ ░▀░ █▀▀ ▀▀█▀▀ █
+▀█▀ ░░█░░ █▀▀ █░▀░█   █░░█ █░░█ █▀▀ ▀▀█ █░░█ ░ ░░█░░   █▀▀ ▄▀▄ ▀█▀ ▀▀█ ░░█░░ ▀
+▀▀▀ ░░▀░░ ▀▀▀ ▀░░░▀   ▀▀▀░ ▀▀▀▀ ▀▀▀ ▀▀▀ ▀░░▀ ░ ░░▀░░   ▀▀▀ ▀░▀ ▀▀▀ ▀▀▀ ░░▀░░ ▄`.red)
+}
 
-    const negativeSign = amount < 0 ? "-" : ""
+const notEnough = () => {
+  console.log(`
+█▀▀▄ █▀▀█ ▀▀█▀▀   █▀▀ █▀▀▄ █▀▀█ █░░█ █▀▀▀ █░░█   ░▀░ █▀▀▄   █▀▀ ▀▀█▀▀ █▀▀█ █▀▀ █░█ █
+█░░█ █░░█ ░░█░░   █▀▀ █░░█ █░░█ █░░█ █░▀█ █▀▀█   ▀█▀ █░░█   ▀▀█ ░░█░░ █░░█ █░░ █▀▄ ▀
+▀░░▀ ▀▀▀▀ ░░▀░░   ▀▀▀ ▀░░▀ ▀▀▀▀ ░▀▀▀ ▀▀▀▀ ▀░░▀   ▀▀▀ ▀░░▀   ▀▀▀ ░░▀░░ ▀▀▀▀ ▀▀▀ ▀░▀ ▄`.red)
+}
 
-    let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString()
-    let j = (i.length > 3) ? i.length % 3 : 0
+const justBought = () => {
+  console.log(`
+█░░█ █▀▀█ █░░█   ░░▀ █░░█ █▀▀ ▀▀█▀▀   █▀▀▄ █▀▀█ █░░█ █▀▀▀ █░░█ ▀▀█▀▀ ▄
+█▄▄█ █░░█ █░░█   ░░█ █░░█ ▀▀█ ░░█░░   █▀▀▄ █░░█ █░░█ █░▀█ █▀▀█ ░░█░░ ░
+▄▄▄█ ▀▀▀▀ ░▀▀▀   █▄█ ░▀▀▀ ▀▀▀ ░░▀░░   ▀▀▀░ ▀▀▀▀ ░▀▀▀ ▀▀▀▀ ▀░░▀ ░░▀░░ ▀`.green)
+}
 
-    return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "")
-  } catch (e) {
-    console.log(e)
-  }
+const welcomeSplash = () => {
+  console.log(`
+      █░░░█ █▀▀ █░░ █▀▀ █▀▀█ █▀▄▀█ █▀▀   ▀▀█▀▀ █▀▀█   █▀▀▄ █▀▀█ █▀▄▀█ █▀▀█ ▀▀█ █▀▀█ █▀▀▄ █
+      █▄█▄█ █▀▀ █░░ █░░ █░░█ █░▀░█ █▀▀   ░░█░░ █░░█   █▀▀▄ █▄▄█ █░▀░█ █▄▄█ ▄▀░ █░░█ █░░█ ▀
+      ░▀░▀░ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀▀ ▀░░░▀ ▀▀▀   ░░▀░░ ▀▀▀▀   ▀▀▀░ ▀░░▀ ▀░░░▀ ▀░░▀ ▀▀▀ ▀▀▀▀ ▀░░▀ ▄`.yellow)
 }

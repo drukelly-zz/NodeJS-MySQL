@@ -11,7 +11,6 @@
 ## Usage
 - `node bamazonCustomer`
 - `node bamazonManager`
-- `node bamazonSupervisor`
 
 ### Notable npm packages
 - `cli-table` is used to make the tables "pretty": [https://www.npmjs.com/package/cli-table]
