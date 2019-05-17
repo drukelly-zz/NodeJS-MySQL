@@ -46,6 +46,10 @@ const listInventory = () => {
           inStock = response[i].stock_quantity
       table.push([`${sku}`, `${productName}`, `${deptName}`, `$${price}`, `${inStock}`])
     }
+    console.log(`
+      █░░░█ █▀▀ █░░ █▀▀ █▀▀█ █▀▄▀█ █▀▀   ▀▀█▀▀ █▀▀█   █▀▀▄ █▀▀█ █▀▄▀█ █▀▀█ ▀▀█ █▀▀█ █▀▀▄ █
+      █▄█▄█ █▀▀ █░░ █░░ █░░█ █░▀░█ █▀▀   ░░█░░ █░░█   █▀▀▄ █▄▄█ █░▀░█ █▄▄█ ▄▀░ █░░█ █░░█ ▀
+      ░▀░▀░ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀▀ ▀░░░▀ ▀▀▀   ░░▀░░ ▀▀▀▀   ▀▀▀░ ▀░░▀ ▀░░░▀ ▀░░▀ ▀▀▀ ▀▀▀▀ ▀░░▀ ▄`.yellow)
     console.log(table.toString())
     inquirer.prompt({
       name: 'selectedSKU',
