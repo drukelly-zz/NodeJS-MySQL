@@ -29,7 +29,7 @@ const updateInventory = () => {
   }, {
     name: 'newQty',
     type: 'input',
-    message: 'What\'s the new quantity of this SKU?'
+    message: `What's the new quantity for this SKU?`
   }]
   const processUpdateInventory = (answers) => {
     let updateQuery = `update ${process.env.dbTable} set stock_quantity = ${answers.newQty} where sku = ${answers.sku}`
